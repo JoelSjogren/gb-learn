@@ -47,6 +47,19 @@ class Gameboy():
     def setKeys(self, *keys):
         self._core.setKeys(*keys)
 
+def _bytes_to_int(xs):
+    return int.from_bytes(xs, byteorder='big')
+
+def _int_to_bytes(n, length):
+    return tuple(int.to_bytes(n, length=length, byteorder='big'))
+
+def read_pokemon_state(gameboy):
+    raw = gameboy._core.memory.u8
+    info = {}
+    info['money'] = _bytes_to_int(raw[0xd84e:0xd851])
+    # refer to https://github.com/pret/pokecrystal/blob/master/wram.asm
+    return info
+
 KEY_A = mgba.gb.GB.KEY_A
 KEY_B = mgba.gb.GB.KEY_B
 KEY_UP = mgba.gb.GB.KEY_UP
